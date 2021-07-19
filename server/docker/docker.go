@@ -38,6 +38,7 @@ type DockerContainers struct {
 type DockerContainer struct {
 	ContainerName string `json:"DockerContainerName"`
 	ContainerDescription string `json:"ContainerDescription"`
+	Ports Ports `json:"Ports"`
 }
 
 type Ports struct {
@@ -109,6 +110,7 @@ func BuildRunContainer(NumPorts int, GPU string, ContainerName string) (*DockerV
 		}
 	}
 
+	// Read information from the ports file of the container about to be executed
 	PortsInformation, err := OpenPortsFile(RespDocker.ImagePath + "/ports.json")
 	if err != nil {
 		return nil, err
@@ -213,7 +215,7 @@ func (d *DockerVM)runContainer(dockerClient *client.Client) error{
 		var ExposedPort nat.PortSet
 
 		ExposedPort = nat.PortSet{
-			"22/tcp": struct{}{},
+			//"22/tcp": struct{}{},
 			//"6901/tcp": struct{}{},
 		}
 
@@ -354,6 +356,15 @@ func ViewAllContainers() (*DockerContainers, error){
 			if err != nil {
 				return nil, err
 			}
+
+			// Read port information
+			PortsInformation, err := OpenPortsFile(config.DockerContainers + "/" + Container.ContainerName + "/ports.json")
+			if err != nil {
+				return nil, err
+			}
+
+			// Add port internal port information
+			Container.Ports = *PortsInformation
 
 			// Get Description from description.txt
 			Container.ContainerDescription = string(Description)
