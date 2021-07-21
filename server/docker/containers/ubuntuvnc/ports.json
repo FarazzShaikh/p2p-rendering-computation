@@ -5,6 +5,13 @@
       "InternalPort": 22,
       "Type": "tcp",
       "Description": "SSH Port"
+    },
+    {
+      "PortName": "VNC",
+      "InternalPort": 6080,
+      "Type": "tcp",
+      "Description": "To find VNC password SSH inside the container"
     }
+
   ]
 }

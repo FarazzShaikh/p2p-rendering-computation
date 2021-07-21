@@ -16,6 +16,31 @@ func TestDetectPlugins(t *testing.T) {
 	}
 }
 
+// Test case for testing specific ansible runs
+func TestRunPlugin2(t *testing.T) {
+	var testips []*ExecuteIP
+	var testip1 ExecuteIP
+
+	container1 ,err := docker.BuildRunContainer(0,"false","")
+	if err != nil {
+		fmt.Println(err)
+		t.Fail()
+	}
+
+	//Test IP 1 configuration
+	testip1.IPAddress = "0.0.0.0"
+	testip1.SSHPortNo = strconv.Itoa(container1.Ports.PortSet[0].ExternalPort)
+
+	testips = append(testips, &testip1)
+
+	_,err = RunPlugin("Ansible-VNC",testips)
+	if err != nil {
+		fmt.Println(err)
+		t.Fail()
+	}
+
+}
+
 // Test ensures that the ansible are executed inside local containers
 func TestRunPlugin(t *testing.T) {
 	var testips []*ExecuteIP
@@ -30,7 +55,7 @@ func TestRunPlugin(t *testing.T) {
 
 	//Test IP 1 configuration
 	testip1.IPAddress = "0.0.0.0"
-	testip1.SSHPortNo = strconv.Itoa(container1.SSHPort)
+	testip1.SSHPortNo = strconv.Itoa(container1.Ports.PortSet[0].ExternalPort)
 
 	// Create docker container and get SSH port
 	container2 ,err := docker.BuildRunContainer(0,"false","")
@@ -40,7 +65,7 @@ func TestRunPlugin(t *testing.T) {
 	}
 	//Test IP 2 configuration
 	testip2.IPAddress = "0.0.0.0"
-	testip2.SSHPortNo = strconv.Itoa(container2.SSHPort)
+	testip2.SSHPortNo = strconv.Itoa(container2.Ports.PortSet[0].ExternalPort)
 
 	testips = append(testips, &testip1)
 	testips = append(testips, &testip2)

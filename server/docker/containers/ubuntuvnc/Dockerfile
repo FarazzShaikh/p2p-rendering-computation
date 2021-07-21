@@ -11,7 +11,7 @@
 # from   consol/ubuntu-xfce-vnc
 
 # due to dependency issues vnc is still work in progress
-from dorowu/ubuntu-desktop-lxde-vnc
+from chenjr0719/ubuntu-unity-novnc
 
 # Switch to root user to install additional software
 USER 0
